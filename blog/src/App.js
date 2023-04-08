@@ -30,19 +30,6 @@ const App = () => {
                     <h4>{title[2]}</h4>
                     <p>2월 17일 발행</p>
                 </div>
-
-                {/* state 데이터 변경(배열) */}
-                <button onClick={() => {
-                    let copy = [...title]
-                    copy[0] = "여자코트 추천"
-                    setTitle(copy)
-                }}>글 수정</button>
-                
-                {/* state 가나다순 정렬 */}
-                <button onClick={() => {
-                    let copy = [...title].sort()
-                    setTitle(copy)
-                }}>정렬</button> 
             </div>
         </div >
     );
