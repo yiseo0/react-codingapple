@@ -1,32 +1,67 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Container, Nav, Navbar, Row } from 'react-bootstrap';
+import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
 import './App.css';
-import { Container, Nav, Navbar, Row, Col } from 'react-bootstrap';
+import data from './data'
+import Card from './components/Card'
+import Detail from './pages/Detail';
+import About from './pages/About';
+import Event from './pages/Event';
 
 const App = () => {
+
+  let [shoes, setShoes] = useState(data)
+
+  const fnSort = () => {
+    let sort = shoes.sort((a, b) => {
+      return a.title < b.title ? -1 : 1
+    })
+    setShoes([...sort])
+  }
+
   return (
     <>
       <Navbar bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand href="#home">Shoe Shop</Navbar.Brand>
+          <Navbar.Brand>Shoe Shop</Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#features">Features</Nav.Link>
-            <Nav.Link href="#pricing">Pricing</Nav.Link>
+            <Nav.Link><Link to="/">Home</Link></Nav.Link>
+            <Nav.Link><Link to="/detail">Detail</Link></Nav.Link>
+            <Nav.Link><Link to="/about">about</Link></Nav.Link>
+            <Nav.Link><Link to="/event">event</Link></Nav.Link>
           </Nav>
         </Container>
       </Navbar>
 
-      <div className="main-bg"></div>
+      <Routes>
+        <Route path="/" element={
+          <>
+            <div className="main-bg"></div>
 
-      <Container>
-        <Row>
-          <Col md={4}>
-            <img src="https://codingapple1.github.io/shop/shoes1.jpg" width="80%" alt="" />
-            <h4>상품명</h4>
-            <p>상품설명</p>
-          </Col>
-        </Row>
-      </Container>
+            <Container>
+              <Row>
+                {
+                  shoes.map(shoe => {
+                    return <Card shoe={shoe} key={shoe.id} />
+                  })
+                }
+              </Row>
+              <button onClick={fnSort}>정렬</button>
+            </Container>
+          </>
+        } />
+        <Route path="/detail/:id" element={<Detail shoes={shoes} />} />
+        <Route path="*" element={<div>404 페이지 오류</div>} />
+        <Route path="/about" element={<About />}>
+          <Route path="member" element={<div>member</div>} />
+          <Route path="lacation" element={<div>lacation</div>} />
+        </Route>
+        <Route path="/event" element={<Event />}>
+          <Route path="one" element={<div>첫 주문시 양배추즙 서비스</div>} />
+          <Route path="two" element={<div>생일기념 쿠폰받기</div>} />
+        </Route>
+      </Routes>
+
     </>
   );
 };
