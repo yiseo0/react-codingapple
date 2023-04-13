@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Nav, Navbar, Row } from 'react-bootstrap';
 import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
 import './App.css';
@@ -7,17 +7,23 @@ import Card from './components/Card'
 import Detail from './pages/Detail';
 import About from './pages/About';
 import Event from './pages/Event';
+import axios from 'axios';
 
 const App = () => {
 
   let [shoes, setShoes] = useState(data)
-
+  let [isChk, setIsChk] = useState(2)
+  let [loading, setLoading] = useState(false)
   const fnSort = () => {
     let sort = shoes.sort((a, b) => {
       return a.title < b.title ? -1 : 1
     })
     setShoes([...sort])
   }
+
+  useEffect(() => {
+
+  },[isChk])
 
   return (
     <>
@@ -47,6 +53,33 @@ const App = () => {
                 }
               </Row>
               <button onClick={fnSort}>정렬</button>
+
+              <button onClick={() => {
+                setLoading(true)
+                isChk <= 3 &&
+                axios.get(`https://codingapple1.github.io/shop/data${isChk}.json`)
+                .then(res => {
+                  setShoes([...shoes, ...res.data])
+                })
+                .catch(() => console.log('실패'))
+                setIsChk(isChk + 1)
+                setLoading(false)
+                
+
+                Promise.all([
+                  axios.get(axios.get('url2'), axios.get('url2'))
+                  .then(() => {})
+                  .catch(() => {})
+                ])
+              }}>버튼</button>
+
+              {
+                loading && <div>로딩중</div>
+              }
+
+              {
+                isChk > 4 && <div>상품이 더 없습니다.</div>
+              }
             </Container>
           </>
         } />
