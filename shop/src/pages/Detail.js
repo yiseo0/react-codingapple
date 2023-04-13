@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from 'react';
+import { Nav } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import TabContent from '../components/TabContent';
 
 const Detail = (props) => {
    const [alert, setAlert] = useState(true)
-
+   
    useEffect(() => {
       setTimeout(() => {
          setAlert(false)
       }, 2000)
    }, [])
+
+   // tab
+   const [tab, setTab] = useState(0)
+   const fnTabClick = (num) => {
+      setTab(num)
+   }
 
    let { id } = useParams()
    const data = props.shoes.find(el => el.id == id)
@@ -44,7 +52,7 @@ const Detail = (props) => {
                <img src={`https://codingapple1.github.io/shop/shoes${Number(id) + 1}.jpg`} width="100%" />
             </div>
             <div className="col-md-6">
-               <input type="text" value={text} onChange={(e)=> setText(e.target.value)} />
+               <input type="text" value={text} onChange={(e) => setText(e.target.value)} />
 
                <h4 className="pt-5">{title}</h4>
                <p>{content}</p>
@@ -52,6 +60,21 @@ const Detail = (props) => {
                <button className="btn btn-danger">주문하기</button>
             </div>
          </div>
+
+         <Nav variant="tabs" defaultActiveKey="link0">
+            <Nav.Item>
+               <Nav.Link eventKey="link0" onClick={() => fnTabClick(0)}>버튼0</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+               <Nav.Link eventKey="link1" onClick={() => fnTabClick(1)}>버튼1</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+               <Nav.Link eventKey="link2" onClick={() => fnTabClick(2)}>버튼2</Nav.Link>
+            </Nav.Item>
+         </Nav>
+
+         <TabContent tab={tab} />
+
       </div>
    );
 };
