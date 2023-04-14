@@ -1,5 +1,5 @@
 .main-bg { height: 300px; background: url('/public/images/bg.png') no-repeat center / cover; } 
 
-/* animation */
+/* anima */
 .start { opacity: 0; } 
 .end { opacity: 1; transition: opacity 0.5s; } 

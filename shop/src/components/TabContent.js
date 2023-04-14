@@ -1,6 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { Context1 } from '../App';
 
 const TabContent = ({ tab }) => {
+   // context
+   let { stock } = useContext(Context1)
+
+   // tab fade effect
    let [fade, setFade] = useState('')
 
    useEffect(() => {
@@ -18,6 +23,7 @@ const TabContent = ({ tab }) => {
    // 방법1 
    return (
       <div className={`start ${fade}`}>
+         {stock}
          {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][tab]}
       </div>
    )
