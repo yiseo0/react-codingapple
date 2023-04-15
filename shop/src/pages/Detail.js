@@ -34,7 +34,7 @@ const Detail = (props) => {
 
    // 장바구니 추가
    const onAdd = () => {
-      dispatch(addItem({ id: data,id, name: title, count: 1 }))
+      dispatch(addItem({ id: data, id, name: title, count: 1 }))
       navigate('/cart')
    }
 
