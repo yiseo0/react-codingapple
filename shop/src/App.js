@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { Container, Nav, Navbar, Row } from 'react-bootstrap';
 import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
+import { useQuery } from 'react-query'
 import './App.css';
 import data from './data'
 import Card from './components/Card'
@@ -29,6 +30,13 @@ const App = () => {
     }
   }, [])
 
+  let result = useQuery('query', ()=>
+    axios.get('https://codingapple1.github.io/userdata.json')
+    .then((a)=>{ return a.data }),
+    {staleTime: 2000}
+  )
+  
+
   const fnSort = () => {
     let sort = shoes.sort((a, b) => {
       return a.title < b.title ? -1 : 1
@@ -53,6 +61,9 @@ const App = () => {
           </Nav>
         </Container>
       </Navbar>
+      {result.isLoading && '로딩중'}
+      {result.error && '에러'}
+      {result.data && result.data.name}
 
       <Routes>
         <Route path="/" element={
