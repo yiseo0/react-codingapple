@@ -13,6 +13,7 @@ import axios from 'axios';
 // context 생성
 export let Context1 = createContext()
 
+
 const App = () => {
 
   let [shoes, setShoes] = useState(data)
@@ -20,6 +21,14 @@ const App = () => {
 
   let [isChk, setIsChk] = useState(2)
   let [loading, setLoading] = useState(false)
+
+  // 최근 본 상품
+  useEffect(() => {
+    if (!localStorage.getItem('watched')) {
+      localStorage.setItem('watched', JSON.stringify([]))
+    }
+  }, [])
+
   const fnSort = () => {
     let sort = shoes.sort((a, b) => {
       return a.title < b.title ? -1 : 1
