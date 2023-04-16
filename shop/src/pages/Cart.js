@@ -1,25 +1,29 @@
-import React, { useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import { Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeAge, changeName } from '../store/userSlice';
 import { addCount, delItem } from '../store';
 
+const Child = memo(() => {
+   console.log('재렌더링')
+   return <div>자식 컴포넌트</div>
+})
+
+const 함수 = () => {
+   return <div>복잡한 연산</div>
+}
+
 const Cart = () => {
+   // useMemo
+   useMemo(() => {
+      함수()
+   },[state])
 
    let state = useSelector(state => state)
    let { user, cart } = state
    let dispatch = useDispatch()
 
-   // const fnIsChk = (idx) => {
-   //    setIsChk(!isChk[idx].isChk)
-   // }
-   // 모든 항목 체크
-   // const fnIsChk = (e) => {
-   //    const {name} = e.target
-   //    console.log(name)
-   //    if(name == 'allChk') { }
-   //    setisChk(!isChk)
-   // }
+   let [count, setCount] = useState(0)
 
    return (
       <div>
@@ -53,7 +57,11 @@ const Cart = () => {
                }
             </tbody>
          </Table>
-         s      </div>
+
+         {/* memo */}
+         <Child count={count}></Child>
+         <button onClick={() => setCount(count + 1)}>카운트 증가</button>
+      </div>
    );
 };
 
