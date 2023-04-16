@@ -1,15 +1,19 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { Suspense, createContext, lazy, useEffect, useState } from 'react';
 import { Container, Nav, Navbar, Row } from 'react-bootstrap';
 import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
 import { useQuery } from 'react-query'
 import './App.css';
 import data from './data'
 import Card from './components/Card'
-import Detail from './pages/Detail';
 import About from './pages/About';
 import Event from './pages/Event';
-import Cart from './pages/Cart';
 import axios from 'axios';
+
+// import Detail from './pages/Detail';
+// import Cart from './pages/Cart';
+
+const Detail = lazy(() => import('./pages/Detail.js'));
+const Cart = lazy(() => import('./pages/Cart.js'));
 
 // context 생성
 export let Context1 = createContext()
@@ -30,12 +34,12 @@ const App = () => {
     }
   }, [])
 
-  let result = useQuery('query', ()=>
+  let result = useQuery('query', () =>
     axios.get('https://codingapple1.github.io/userdata.json')
-    .then((a)=>{ return a.data }),
-    {staleTime: 2000}
+      .then((a) => { return a.data }),
+    { staleTime: 2000 }
   )
-  
+
 
   const fnSort = () => {
     let sort = shoes.sort((a, b) => {
@@ -65,67 +69,68 @@ const App = () => {
       {result.error && '에러'}
       {result.data && result.data.name}
 
-      <Routes>
-        <Route path="/" element={
-          <>
-            <div className="main-bg"></div>
+      <Suspense fallback={<div>로딩중입니다.</div>}>
+        <Routes>
+          <Route path="/" element={
+            <>
+              <div className="main-bg"></div>
 
-            <Container>
-              <Row>
-                {
-                  shoes.map(shoe => {
-                    return <Card shoe={shoe} key={shoe.id} />
-                  })
-                }
-              </Row>
-              <button onClick={fnSort}>정렬</button>
-
-              <button onClick={() => {
-                setLoading(true)
-                isChk <= 3 &&
-                  axios.get(`https://codingapple1.github.io/shop/data${isChk}.json`)
-                    .then(res => {
-                      setShoes([...shoes, ...res.data])
+              <Container>
+                <Row>
+                  {
+                    shoes.map(shoe => {
+                      return <Card shoe={shoe} key={shoe.id} />
                     })
-                    .catch(() => console.log('실패'))
-                setIsChk(isChk + 1)
-                setLoading(false)
+                  }
+                </Row>
+                <button onClick={fnSort}>정렬</button>
+
+                <button onClick={() => {
+                  setLoading(true)
+                  isChk <= 3 &&
+                    axios.get(`https://codingapple1.github.io/shop/data${isChk}.json`)
+                      .then(res => {
+                        setShoes([...shoes, ...res.data])
+                      })
+                      .catch(() => console.log('실패'))
+                  setIsChk(isChk + 1)
+                  setLoading(false)
 
 
-                Promise.all([
-                  axios.get(axios.get('url2'), axios.get('url2'))
-                    .then(() => { })
-                    .catch(() => { })
-                ])
-              }}>버튼</button>
+                  Promise.all([
+                    axios.get(axios.get('url2'), axios.get('url2'))
+                      .then(() => { })
+                      .catch(() => { })
+                  ])
+                }}>버튼</button>
 
-              {
-                loading && <div>로딩중</div>
-              }
+                {
+                  loading && <div>로딩중</div>
+                }
 
-              {
-                isChk > 4 && <div>상품이 더 없습니다.</div>
-              }
-            </Container>
-          </>
-        } />
-        <Route path="/detail/:id" element={
-          <Context1.Provider value={{ stock, shoes }}>
-            <Detail shoes={shoes} />
-          </Context1.Provider>
-        } />
-        <Route path="*" element={<div>404 페이지 오류</div>} />
-        <Route path="/about" element={<About />}>
-          <Route path="member" element={<div>member</div>} />
-          <Route path="lacation" element={<div>lacation</div>} />
-        </Route>
-        <Route path="/event" element={<Event />}>
-          <Route path="one" element={<div>첫 주문시 양배추즙 서비스</div>} />
-          <Route path="two" element={<div>생일기념 쿠폰받기</div>} />
-        </Route>
-        <Route path="/cart" element={<Cart />} />
-      </Routes>
-
+                {
+                  isChk > 4 && <div>상품이 더 없습니다.</div>
+                }
+              </Container>
+            </>
+          } />
+          <Route path="/detail/:id" element={
+            <Context1.Provider value={{ stock, shoes }}>
+              <Detail shoes={shoes} />
+            </Context1.Provider>
+          } />
+          <Route path="*" element={<div>404 페이지 오류</div>} />
+          <Route path="/about" element={<About />}>
+            <Route path="member" element={<div>member</div>} />
+            <Route path="lacation" element={<div>lacation</div>} />
+          </Route>
+          <Route path="/event" element={<Event />}>
+            <Route path="one" element={<div>첫 주문시 양배추즙 서비스</div>} />
+            <Route path="two" element={<div>생일기념 쿠폰받기</div>} />
+          </Route>
+          <Route path="/cart" element={<Cart />} />
+        </Routes>
+      </Suspense>
     </>
   );
 };

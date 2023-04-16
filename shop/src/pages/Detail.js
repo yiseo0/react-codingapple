@@ -19,7 +19,6 @@ const Detail = (props) => {
    const navigate = useNavigate()
    const [watched, setWatched] = useState([])
 
-
    useEffect(() => {
       let item = JSON.parse(localStorage.getItem('watched'))
          item.push(id)
